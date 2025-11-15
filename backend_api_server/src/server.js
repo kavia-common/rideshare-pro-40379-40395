@@ -157,7 +157,45 @@ app.get(process.env.REACT_APP_HEALTHCHECK_PATH || '/health', (req, res) => {
     status: 'ok',
     service: 'backend_api_server',
     env: process.env.NODE_ENV || 'development',
-    ws: process.env.REACT_APP_WS_URL || null,
+    ws: process.env.REACT_APP_WS_URL || process.env.REACT_APP_BACKEND_URL || null,
+  });
+});
+
+/**
+ * PUBLIC_INTERFACE
+ * GET /docs
+ * Returns minimal OpenAPI-like metadata and routes listing for quick inspection.
+ */
+app.get('/docs', (req, res) => {
+  /**
+   * summary: API docs metadata
+   * description: Provides high-level API metadata and route hints. Not a full OpenAPI.
+   * responses:
+   *  200: JSON metadata
+   */
+  res.json({
+    openapi: '3.0-lite',
+    info: {
+      title: 'RideShare Pro Backend',
+      description: 'API with JWT auth, trips lifecycle, WebSocket updates, and OSRM routing.',
+      version: '0.1.0',
+    },
+    servers: [{ url: process.env.REACT_APP_BACKEND_URL || `http://localhost:${process.env.PORT || 4000}` }],
+    websocket: {
+      url: process.env.REACT_APP_WS_URL || process.env.REACT_APP_BACKEND_URL || `http://localhost:${process.env.PORT || 4000}`,
+      note: 'Connect via Socket.IO; emit trip:join { tripId } to receive trip:update events.',
+    },
+    tags: ['auth', 'users', 'trips', 'health'],
+    paths: {
+      '/health': { get: { summary: 'Healthcheck' } },
+      '/auth/register': { post: { summary: 'Register user' } },
+      '/auth/login': { post: { summary: 'Login user' } },
+      '/users/me': { get: { summary: 'Current user profile' } },
+      '/trips': { get: { summary: 'List trips' }, post: { summary: 'Create trip' } },
+      '/trips/{id}': { get: { summary: 'Get trip' } },
+      '/trips/{id}/cancel': { post: { summary: 'Cancel trip' } },
+      '/trips/{id}/complete': { post: { summary: 'Complete trip' } },
+    },
   });
 });
 
@@ -167,7 +205,7 @@ app.get('/', (req, res) => {
     name: 'RideShare Pro Backend',
     version: '0.1.0',
     description: 'API with auth, users, trips, websocket and OSRM routing',
-    docs_note: 'OpenAPI auto-gen not included in this scaffold',
+    docs_note: 'See /docs for a minimal API metadata document.',
   });
 });
 
@@ -302,8 +340,6 @@ app.post('/trips', authMiddleware, async (req, res) => {
       };
       io.to(`trip:${trip._id.toString()}`).emit('trip:update', { status: 'assigned', driver: driverPayload });
     }
-
-    // Join trip room implicitly not possible here; client must emit trip:join
 
     // Start simulation of driver movement toward pickup then destination
     if (nearest) {
