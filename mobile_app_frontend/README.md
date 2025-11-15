@@ -11,7 +11,17 @@ This project provides a minimal React template with a clean, modern UI and minim
 
 ## Getting Started
 
-In the project directory, you can run:
+Environment
+- Copy .env.example to .env and ensure:
+  - REACT_APP_API_BASE=http://localhost:4000
+  - REACT_APP_WS_URL=http://localhost:4000
+  - REACT_APP_BACKEND_URL=http://localhost:4000
+  - REACT_APP_FRONTEND_URL=http://localhost:3000
+
+Smoke-check
+- Start backend at http://localhost:4000 and ensure /health responds.
+- npm start
+- Register, create a trip, observe live updates.
 
 ### `npm start`
 

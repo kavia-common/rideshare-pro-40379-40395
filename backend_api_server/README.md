@@ -53,6 +53,7 @@ Node.js + Express server with MongoDB (Mongoose), JWT authentication, Socket.IO 
 - TRUST_PROXY=1 (optional, if behind reverse proxy)
 - LOG_LEVEL (default "dev")
 - JWT_SECRET (required in production)
+- CORS_ORIGINS: use REACT_APP_FRONTEND_URL to set allowed origin
 - REACT_APP_FRONTEND_URL: CORS/browser origin
 - REACT_APP_BACKEND_URL: Base URL for API/WS
 - REACT_APP_WS_URL: WebSocket URL for clients
@@ -63,6 +64,8 @@ Frontend-aligned variables are included for workspace cohesion:
 REACT_APP_API_BASE, REACT_APP_BACKEND_URL, REACT_APP_FRONTEND_URL, REACT_APP_WS_URL, REACT_APP_NODE_ENV,
 REACT_APP_NEXT_TELEMETRY_DISABLED, REACT_APP_ENABLE_SOURCE_MAPS, REACT_APP_PORT, REACT_APP_TRUST_PROXY,
 REACT_APP_LOG_LEVEL, REACT_APP_HEALTHCHECK_PATH, REACT_APP_FEATURE_FLAGS, REACT_APP_EXPERIMENTS_ENABLED
+
+Tip: Copy .env.example to .env and adjust for local dev. A ready-to-use .env with sensible defaults is included for local development (PORT=4000).
 
 ## REST Endpoints
 

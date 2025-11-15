@@ -43,6 +43,7 @@ export function getEnv() {
   /** Returns resolved environment URLs for diagnostics. */
   return {
     API_BASE: API_BASE || '(unset)',
+    BACKEND_URL: process.env.REACT_APP_BACKEND_URL || '(unset)',
     WS_URL: process.env.REACT_APP_WS_URL || '(unset)',
     NODE_ENV: process.env.REACT_APP_NODE_ENV || process.env.NODE_ENV,
   };
